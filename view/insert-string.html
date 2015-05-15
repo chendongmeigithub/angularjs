@@ -6,12 +6,14 @@
     <script src="http://libs.useso.com/js/angular.js/1.2.5/angular.min.js" ></script>
 </head>
 <body ng-app="app">
-    <div ng-controller="FirstController">
-
+    <div ng-controller="MyController">
+        <input ng-model="to" type="email" placeholder="Recipient" />
+        <textarea ng-model="emailBody"></textarea>
+        <pre>{{ previewText }}</pre>
     </div>
     <script>
         var app = angular.module('app', []);
-        app.controller('FirstController', function($scope) {
+        app.controller('MyController', function($scope,$interpolate) {
 
         });
     </script>
