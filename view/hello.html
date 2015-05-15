@@ -1,19 +1,27 @@
 <!DOCTYPE html>
-<html ng-app>
+<html>
 <head lang="en">
     <meta charset="UTF-8">
     <title>Hello</title>
     <script src="../js/angular.min.js" ></script>
 </head>
-<body>
-    <div ng-controller="HelloController">
-        <input ng-model="greeting.text" />
-        <p>{{ greeting.text}},World</p>
+<body ng-app="app">
+    <div ng-controller="FirstController">
+        <h4>{{ person.name }}</h4>
+        <button ng-click="add(1)" class="button">add</button>
+        <a ng-click="subtract(1)" clss="button">Subtract</a>
+        <h4>Current count: {{ counter}} </h4>
     </div>
     <script>
-        function HelloController($scope){
-            $scope.greeting = {text:'Hello'};
-        }
+        var app = angular.module('app', []);
+        app.controller('FirstController', function($scope) {
+            $scope.counter = 0;
+            $scope.add = function(amount) {$scope.counter +=amount; };
+            $scope.subtract = function(amount) {$scope.counter -=amount; };
+            $scope.person = {
+              name: '添加一个最简单的加法机'
+            };
+        });
     </script>
 </body>
 </html>
