@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Expression</title>
+    <script src="http://libs.useso.com/js/angular.js/1.2.5/angular.min.js" ></script>
+</head>
+<body ng-app="app">
+    <div ng-controller="expressionController">
+        <input ng-model="expr" type="text" placeholder="Enter an expression" />
+        <h2>{{ parsedVal }}</h2>
+        <span>请输入表达式例如：3*5</span>
+    </div>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('expressionController', function($scope, $parse) {
+            $scope.$watch('expr', function(newVal, oldVal, scope) {
+                if(newVal !==oldVal) {
+                    //用该表达式设置parseFun
+                    var parseFun = $parse(newVal);
+                    //获取经过解析后表达式的值
+                    $scope.parsedVal = parseFun(scope);
+                }
+            })
+        });
+    </script>
+</body>
+</html>
