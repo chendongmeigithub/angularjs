@@ -1,138 +1,89 @@
 <!DOCTYPE html>
-<html>
+<html >
 <head lang="en">
     <meta charset="UTF-8">
-    <title>时钟</title>
+    <title>Angularjs案例列表</title>
+    <link href="http://libs.useso.com/js/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/trtace.js" ></script>
+    <script src="../js/data.js" ></script>
+    <script src="http://libs.useso.com/js/angular.js/1.2.5/angular.min.js" ></script>
     <style>
-        .clock-box {
-            width: 500px;
-            height: 500px;
-            margin: auto;
-        }
+        .container{margin-top:5%;}
+        .container h1{margin-bottom:20px;}
     </style>
 </head>
-<body>
-    <div class="clock-box">
-        <canvas id="clock" width="500" height="500">
-            此浏览器不支持canvas，无法看到时钟。
-        </canvas>
+<body ng-app>
+    <div class="container" ng-controller="ListController">
+        <h1 class="text-center text-primary">Angularjs案例列表</h1>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in items">
+                        <a href="{{item.link}}" target="_blank">{{item.name}}</a>
+                    </li>
+                </ul>
+
+                <ul class="pagination pull-right">
+                    <li>
+                        <a href="javascript:void(0)"  ng-click="first()">&laquo;</a>
+                    </li>
+                    <li  ng-repeat="i in currentPage">
+                        <a href="javascript:void(0)" ng-click="appoint(i)">{{i}}</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="last()">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
     <script>
-        function drawMark(ctx){
-            //画时标记
-            for(var i=1;i<=12;i++){
-                ctx.save();//保存当前环境的状态。
-                ctx.translate(250,250);
-                ctx.strokeStyle = "#DB6E15";
-                ctx.lineWidth = 7;
-                ctx.rotate(i*30*Math.PI/180);//Math.PI=180弧度
-                ctx.beginPath();
-                ctx.moveTo(0,-170);
-                ctx.lineTo(0,-190);
-                ctx.stroke();//绘制已定义的路径。
-                ctx.closePath();//创建从当前点回到起始点的路径。
-                ctx.restore();
+        function ListController($scope){
+            var getLiatData = getList();//所有数据
+            var page = Math.ceil(getLiatData.length/10);//页数
+            var currentPageData = new Array();
+
+            //循环显示页数分页页数
+            var currentPage = new Array();
+            for(var i = 0;i<page; i++){
+                currentPage[i] = i+1;
             }
-            //画分标记
-            for(var i=0;i<60;i++){
-                ctx.save();//保存当前环境的状态。
-                ctx.translate(250,250);
-                ctx.strokeStyle = "#DB6E15";
-                ctx.lineWidth = 3;
-                ctx.rotate(i*6*Math.PI/180);//Math.PI=180弧度
-                ctx.beginPath();
-                ctx.moveTo(0,-180);
-                ctx.lineTo(0,-190);
-                ctx.stroke();//绘制已定义的路径。
-                ctx.closePath();//创建从当前点回到起始点的路径。
-                ctx.restore();
+            $scope.currentPage = currentPage;
+
+            //开始显示分页数据
+            for(var i = 0;(i<10)&&(i<getLiatData.length); i++){
+                currentPageData[i] = getLiatData[i];
             }
-            //画数字
-            var clockNumn=[3,6,9,12];
-            for(var i=0;i<=clockNumn.length;i++){
-                ctx.save();//保存当前环境的状态。
-                ctx.translate(250,250);
-                ctx.beginPath();
-                ctx.font="16px Arial";
-                if((clockNumn[i]==3)||(clockNumn[i]==9)){
-                    ctx.fillText(clockNumn[i],155*Math.sin(clockNumn[i]*30*Math.PI/180),6);
-                }else if((clockNumn[i]==6)||(clockNumn[i]==12)){
-                    ctx.fillText(clockNumn[i],-6,-155*Math.cos(clockNumn[i]*30*Math.PI/180));
+            $scope.items =currentPageData;
+
+            //单击指定页数显示数据
+            $scope.appoint = function(amount) {
+                currentPageData = [];
+                for(var i = 10*(amount-1); (i<10*amount)&&(i<getLiatData.length); i++){
+                    currentPageData[i-10*(amount-1)] = getLiatData[i];
                 }
-                ctx.stroke();//绘制已定义的路径。
-                ctx.closePath();//创建从当前点回到起始点的路径。
-                ctx.restore();
-            }
+                $scope.items =currentPageData;
+            };
+            //单击显示第一页数据
+            $scope.first = function() {
+                currentPageData = [];
+                for(var i = 0;i<10&&i<getLiatData.length; i++){
+                    currentPageData[i] = getLiatData[i];
+                }
+                $scope.items =currentPageData;
+            };
+            //单击显示最后一页数据
+            $scope.last = function() {
+                currentPageData = [];
+                for(var i = 10*(page-1);i<10*page&&i<getLiatData.length; i++){
+                    currentPageData[i-10*(page-1)] = getLiatData[i];
+                }
+                $scope.items =currentPageData;
+            };
         }
-
-        function drawPin(ctx,hour,minute,second){
-            //画时针
-            ctx.save();//保存当前环境的状态。
-            ctx.translate(250,250);
-            ctx.strokeStyle = "#DB6E15";
-            ctx.lineWidth = 7;
-            ctx.rotate(hour*30*Math.PI/180);//Math.PI=180弧度
-            ctx.beginPath();
-            ctx.moveTo(0,-90);
-            ctx.lineTo(0,10);
-            ctx.stroke();//绘制已定义的路径。
-            ctx.closePath();//创建从当前点回到起始点的路径。
-            ctx.restore();
-
-            //画分针
-            ctx.save();//保存当前环境的状态。
-            ctx.translate(250,250);
-            ctx.strokeStyle = "#DB6E15";
-            ctx.lineWidth = 5;
-            ctx.rotate(minute*6*Math.PI/180);//Math.PI=180弧度
-            ctx.beginPath();
-            ctx.moveTo(0,-120);
-            ctx.lineTo(0,10);
-            ctx.stroke();//绘制已定义的路径。
-            ctx.closePath();//创建从当前点回到起始点的路径。
-            ctx.restore();
-
-            //画秒针
-            ctx.save();//保存当前环境的状态。
-            ctx.translate(250,250);
-            ctx.strokeStyle = "#DB6E15";
-            ctx.lineWidth = 2;
-            ctx.rotate(second*6*Math.PI/180);//Math.PI=180弧度
-            ctx.beginPath();
-            ctx.moveTo(0,-160);
-            ctx.lineTo(0,15);
-            ctx.stroke();//绘制已定义的路径。
-            ctx.closePath();//创建从当前点回到起始点的路径。
-            ctx.restore();
-        }
-
-        function drawClock(){
-            //获取绘图对象
-            var clock = document.getElementById("clock");
-            //建立HTML5对象
-            var ctx = clock.getContext("2d");
-            //获取时间信息
-            var time = new Date();
-            var hour = time.getHours();
-            var minute = time.getMinutes();
-            var second = time.getSeconds();
-            //获取时间在12显示内的范围，绘制小时指针
-            hour = hour + minute/60;
-            hour?hour>12:hour-12;//hour = hour%12;
-
-            //清除canvans内像素
-            ctx.clearRect(0,0,500,500);
-            ctx.beginPath();//设置路径
-            ctx.strokeStyle = "#8AC007";//设置笔触的颜色
-            ctx.lineWidth = 10;//设置笔触的尺寸
-            ctx.arc(250,250,200,0,2*Math.PI);//绘制图形
-            ctx.stroke();//绘制已定义的路径。
-            ctx.closePath();//创建从当前点回到起始点的路径。
-            drawMark(ctx);
-            drawPin(ctx,hour,minute,second);
-        }
-        drawClock();
-        setInterval(drawClock,1000);
     </script>
+<script>
+</script>
 </body>
 </html>
