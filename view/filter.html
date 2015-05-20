@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Angularjs过滤器</title>
+    <link href="http://libs.useso.com/js/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/trtace.js" ></script>
+    <script src="../js/data.js" ></script>
+    <script src="http://libs.useso.com/js/angular.js/1.2.5/angular.min.js" ></script>
+</head>
+<body ng-app="myApp">
+    <div class="container" ng-controller="filterController">
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>金额</th>
+                    <th>名称</th>
+                    <th>数量</th>
+                    <th>下单时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="dat in data">
+                        <td>{{ dat.money | currency  }}</td>
+                        <td>{{ dat.name | uppercase  }}</td>
+                        <td>{{ dat.num }}</td>
+                        <td>{{ dat.time }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script>
+        var myApp = angular.module("myApp", [])
+        myApp.controller('filterController', function($scope) {
+            $scope.data = filter();
+        });
+    </script>
+</body>
+</html>
