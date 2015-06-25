@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html >
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <title>打卡记录</title>
+    <link href="//libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/list.css" rel="stylesheet">
+    <script src="js/angular.min.js" ></script>
+</head>
+<body ng-app>
+    <div class="container" ng-controller="ListController">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 my-info">
+                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    <h2>陈东梅</h2>
+                </div>
+                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <input type="button" value="打卡">
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 salary-info">
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="item in items">
+                        <a href="{{item.link}}" target="_blank">{{item.name}}</a>
+                    </li>
+                </ul>
+
+                <ul class="pagination pull-right">
+                    <li>
+                        <a href="javascript:void(0)"  ng-click="first()">&laquo;</a>
+                    </li>
+                    <li  ng-repeat="i in currentPage">
+                        <a href="javascript:void(0)" ng-click="appoint(i)">{{i}}</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" ng-click="last()">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        function ListController($scope){
+            var getLiatData = getList();//所有数据
+            var page = Math.ceil(getLiatData.length/10);//页数
+            var currentPageData = new Array();
+
+            //循环显示页数分页页数
+            var currentPage = new Array();
+            for(var i = 0;i<page; i++){
+                currentPage[i] = i+1;
+            }
+            $scope.currentPage = currentPage;
+
+            //开始显示分页数据
+            for(var i = 0;(i<10)&&(i<getLiatData.length); i++){
+                currentPageData[i] = getLiatData[i];
+            }
+            $scope.items =currentPageData;
+
+            //单击指定页数显示数据
+            $scope.appoint = function(amount) {
+                currentPageData = [];
+                for(var i = 10*(amount-1); (i<10*amount)&&(i<getLiatData.length); i++){
+                    currentPageData[i-10*(amount-1)] = getLiatData[i];
+                }
+                $scope.items =currentPageData;
+            };
+            //单击显示第一页数据
+            $scope.first = function() {
+                currentPageData = [];
+                for(var i = 0;i<10&&i<getLiatData.length; i++){
+                    currentPageData[i] = getLiatData[i];
+                }
+                $scope.items =currentPageData;
+            };
+            //单击显示最后一页数据
+            $scope.last = function() {
+                currentPageData = [];
+                for(var i = 10*(page-1);i<10*page&&i<getLiatData.length; i++){
+                    currentPageData[i-10*(page-1)] = getLiatData[i];
+                }
+                $scope.items =currentPageData;
+            };
+        }
+    </script>
+</body>
+</html>
