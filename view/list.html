@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>打卡记录</title>
     <link href="//libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/list.css" rel="stylesheet">
-    <script src="js/angular.min.js" ></script>
+    <link href="../css/list.css" rel="stylesheet">
 </head>
 <body ng-app>
     <div class="container" ng-controller="ListController">
@@ -15,30 +14,27 @@
                     <h2>陈东梅</h2>
                 </div>
                 <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                    <input type="button" value="打卡">
+                    <input type="button" class="btn btn-info btn-lg" value="打卡">
                 </div>
             </div>
-            <div class="col-sm-12 col-md-12 col-lg-12 salary-info">
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="item in items">
-                        <a href="{{item.link}}" target="_blank">{{item.name}}</a>
-                    </li>
-                </ul>
-
-                <ul class="pagination pull-right">
-                    <li>
-                        <a href="javascript:void(0)"  ng-click="first()">&laquo;</a>
-                    </li>
-                    <li  ng-repeat="i in currentPage">
-                        <a href="javascript:void(0)" ng-click="appoint(i)">{{i}}</a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0)" ng-click="last()">&raquo;</a>
-                    </li>
-                </ul>
-            </div>
+            <table class="table table-bordered col-xs-12 col-sm-12 col-md-12 col-lg-12 salary-info">
+                <thead>
+                <tr>
+                    <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4">时间</th>
+                    <th class="col-xs-8 col-sm-8 col-md-8 col-lg-8">位置</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in items">
+                    <td>2015.4.24</td>
+                    <td ng-bind="item.name"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+    <script src="../js/angular.min.js" ></script>
+    <script src="../js/data.js" ></script>
     <script>
         function ListController($scope){
             var getLiatData = getList();//所有数据
