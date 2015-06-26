@@ -3,82 +3,68 @@
 <head lang="zh-CN">
     <meta charset="UTF-8">
     <title>打卡记录</title>
-    <link href="//libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/list.css" rel="stylesheet">
+    <link href="http://libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/list.css" rel="stylesheet">
 </head>
 <body ng-app>
-    <div class="container" ng-controller="ListController">
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 my-info">
-                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                    <h2>陈东梅</h2>
-                </div>
-                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                    <input type="button" class="btn btn-info btn-lg" value="打卡">
-                </div>
-            </div>
-            <table class="table table-bordered col-xs-12 col-sm-12 col-md-12 col-lg-12 salary-info">
-                <thead>
-                <tr>
-                    <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4">时间</th>
-                    <th class="col-xs-8 col-sm-8 col-md-8 col-lg-8">位置</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="item in items">
-                    <td>2015.4.24</td>
-                    <td ng-bind="item.name"></td>
-                </tr>
-                </tbody>
-            </table>
+<div class="container"  ng-cloak ng-controller="ListController">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 my-info">
+            <label class="name pull-left" ng-bind="personName"></label>
+            <input type="button" class="btn btn-default btn-lg salary pull-right" value="打卡">
         </div>
+        <table class="table table-bordered col-xs-12 col-sm-12 col-md-12 col-lg-12 salary-info">
+            <thead>
+            <tr>
+                <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4">考勤时间</th>
+                <th class="col-xs-8 col-sm-8 col-md-8 col-lg-8">地理位置</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="record in personRecords">
+                <td ng-bind="record.time"></td>
+                <td ng-bind="record.location"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <script src="../js/angular.min.js" ></script>
-    <script src="../js/data.js" ></script>
-    <script>
-        function ListController($scope){
-            var getLiatData = getList();//所有数据
-            var page = Math.ceil(getLiatData.length/10);//页数
-            var currentPageData = new Array();
+</div>
+<script src="http://libs.useso.com/js/jquery/2.1.0/jquery.min.js"></script>
+<script src="http://libs.useso.com/js/angular.js/1.2.9/angular.min.js" ></script>
+<script>
+    function getList(){
+        var param = window.location.search;
+        var id = param.split("=");
+        var json;
+        if(id.length == 2){
+            $.ajax({
+                async : false,
+                url: "http://wwpunch.sinaapp.com/getList.php",
+                data: { id: id[1]},
+                type: "GET",
+                dataType: 'json'
+            })
+              .then(function (response) {
+                  // success
+                  json = response;
+              },
+              function () {
+                  // failure
 
-            //循环显示页数分页页数
-            var currentPage = new Array();
-            for(var i = 0;i<page; i++){
-                currentPage[i] = i+1;
-            }
-            $scope.currentPage = currentPage;
-
-            //开始显示分页数据
-            for(var i = 0;(i<10)&&(i<getLiatData.length); i++){
-                currentPageData[i] = getLiatData[i];
-            }
-            $scope.items =currentPageData;
-
-            //单击指定页数显示数据
-            $scope.appoint = function(amount) {
-                currentPageData = [];
-                for(var i = 10*(amount-1); (i<10*amount)&&(i<getLiatData.length); i++){
-                    currentPageData[i-10*(amount-1)] = getLiatData[i];
-                }
-                $scope.items =currentPageData;
-            };
-            //单击显示第一页数据
-            $scope.first = function() {
-                currentPageData = [];
-                for(var i = 0;i<10&&i<getLiatData.length; i++){
-                    currentPageData[i] = getLiatData[i];
-                }
-                $scope.items =currentPageData;
-            };
-            //单击显示最后一页数据
-            $scope.last = function() {
-                currentPageData = [];
-                for(var i = 10*(page-1);i<10*page&&i<getLiatData.length; i++){
-                    currentPageData[i-10*(page-1)] = getLiatData[i];
-                }
-                $scope.items =currentPageData;
-            };
+              })
+              .always(function () {
+              });
+            return json;
         }
-    </script>
+    }
+
+    function ListController($scope){
+        var records =  getList();
+        if(!records.rc){
+            $scope.personName = records.name;
+            $scope.personRecords = records.records;
+        }
+    }
+</script>
 </body>
 </html>

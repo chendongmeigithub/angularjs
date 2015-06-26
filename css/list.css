@@ -1,0 +1,33 @@
+@charset "utf-8";
+* {
+  margin:0;
+  padding:0;
+  list-style-type: none;
+}
+a {
+  text-decoration:none;
+}
+.container {
+  width: 94%;
+  margin-left: 3%;
+  font-size: 1em;
+}
+.my-info {
+  height: 3em;
+  padding-top: 0.8em;
+  font-size: 3em;
+}
+.my-info .salary {
+  font-size: 0.6em;
+  margin-right: 1em;
+  padding: 0.6em 1.8em;
+  outline:0 none !important;
+  blr:expression(this.onFocus=this.blur());
+}
+table {
+  font-size: 2em;
+}
+th,
+td {
+  text-indent: 0.3em;
+}
