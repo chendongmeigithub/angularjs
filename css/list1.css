@@ -1,0 +1,46 @@
+@charset "utf-8";
+* {
+  margin:0;
+  padding:0;
+  list-style-type: none;
+}
+a {
+  text-decoration:none;
+}
+body {
+　font: normal 100% Helvetica, Arial, sans-serif;
+}
+.body {
+  width: 96%;
+  margin-left: 2%;
+  font-size: 1em;
+}
+.my-info {
+  height: 3.5em;
+  line-height: 3em;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  font-size: 1em;
+}
+.my-info .name {
+  font-size: 1.5em;
+  line-height: 1.8em;
+}
+.my-info .salary {
+  font-size: 1em;
+  margin-right: 1em;
+  padding: 0.6em 1.8em;
+  outline:0 none !important;
+  border-radius: 0px;
+  blr:expression(this.onFocus=this.blur());
+}
+table {
+  font-size: 1em;
+}
+th{
+  font-size: 0.8em;
+  text-indent: 0.1em;
+}
+td{
+  font-size: 0.6em;
+}

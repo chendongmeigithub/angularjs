@@ -2,69 +2,73 @@
 <html >
 <head lang="zh-CN">
     <meta charset="UTF-8">
+    <meta name="fragment" content="!">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no, email=no">
     <title>打卡记录</title>
     <link href="http://libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/list.css" rel="stylesheet">
+    <link href="css/list1.css" rel="stylesheet">
 </head>
 <body ng-app>
-<div class="container"  ng-cloak ng-controller="ListController">
-    <div class="row">
+    <div class="body"  ng-cloak ng-controller="ListController">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 my-info">
             <label class="name pull-left" ng-bind="personName"></label>
-            <input type="button" class="btn btn-default btn-lg salary pull-right" value="打卡">
+            <a href='app://Punch' class="btn btn-default btn-lg salary pull-right"> 打卡</a>
         </div>
-        <table class="table table-bordered col-xs-12 col-sm-12 col-md-12 col-lg-12 salary-info">
+        <table class="table table-bordered col-xs-12 col-sm-12 col-md-12 col-lg-12 salary-info text-center">
             <thead>
             <tr>
-                <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4">考勤时间</th>
-                <th class="col-xs-8 col-sm-8 col-md-8 col-lg-8">地理位置</th>
+                <th class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">考勤时间</th>
+                <th class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">地理位置</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="record in personRecords">
-                <td ng-bind="record.time"></td>
-                <td ng-bind="record.location"></td>
-            </tr>
+                <tr ng-repeat="record in personRecords">
+                    <td ng-bind="record.time"></td>
+                    <td ng-bind="record.location"></td>
+                </tr>
             </tbody>
         </table>
     </div>
-</div>
-<script src="http://libs.useso.com/js/jquery/2.1.0/jquery.min.js"></script>
-<script src="http://libs.useso.com/js/angular.js/1.2.9/angular.min.js" ></script>
-<script>
-    function getList(){
-        var param = window.location.search;
-        var id = param.split("=");
-        var json;
-        if(id.length == 2){
-            $.ajax({
-                async : false,
-                url: "http://wwpunch.sinaapp.com/getList.php",
-                data: { id: id[1]},
-                type: "GET",
-                dataType: 'json'
-            })
-              .then(function (response) {
-                  // success
-                  json = response;
-              },
-              function () {
-                  // failure
-
-              })
-              .always(function () {
-              });
-            return json;
+    <script src="http://libs.useso.com/js/jquery/2.1.0/jquery.min.js"></script>
+    <script src="http://libs.useso.com/js/angular.js/1.2.9/angular.min.js" ></script>
+    <script>
+        function getList(){
+            var param = window.location.search;
+            var id = param.split("=");
+            var json;
+            if(id.length == 2){
+                $.ajax({
+                    async : false,
+                    url: "http://wwpunch.sinaapp.com/getList.php",
+                    data: { id: id[1]},
+                    type: "GET",
+                    dataType: 'json'
+                })
+                  .then(function (response) {
+                      // success
+                      json = response;
+                      console.log("then");
+                  })
+                  .fail(function () {
+                      console.log("fail");
+                  })
+                  .always(function () {
+                      console.log("always");
+                  });
+                return json;
+            }
         }
-    }
 
-    function ListController($scope){
-        var records =  getList();
-        if(!records.rc){
-            $scope.personName = records.name;
-            $scope.personRecords = records.records;
+        function ListController($scope){
+            var records =  getList();
+            if(!records.rc){
+                $scope.personName = records.name;
+                $scope.personRecords = records.records;
+            }
         }
-    }
-</script>
+    </script>
 </body>
 </html>
