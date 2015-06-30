@@ -11,9 +11,12 @@ body {
 　font: normal 100% Helvetica, Arial, sans-serif;
 }
 .body {
+  position: relative;
+  display: block;
   width: 96%;
   margin-left: 2%;
   font-size: 1em;
+  display: none;
 }
 .my-info {
   height: 3.5em;
@@ -43,4 +46,7 @@ th{
 }
 td{
   font-size: 0.6em;
+}
+.skip{
+  display: none;
 }

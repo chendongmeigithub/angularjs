@@ -11,8 +11,8 @@
     <link href="http://libs.useso.com/js/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/list1.css" rel="stylesheet">
 </head>
-<body ng-app>
-    <div class="body"  ng-cloak ng-controller="ListController">
+<body>
+    <div class="body"  ng-app="app"  ng-cloak ng-controller="ListController">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 my-info">
             <label class="name pull-left" ng-bind="personName"></label>
             <a href='app://Punch' class="btn btn-default btn-lg salary pull-right"> 打卡</a>
@@ -25,13 +25,16 @@
             </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="record in personRecords">
+                <tr data-ng-repeat="record in personRecords"  on-finish-render-filters>
                     <td ng-bind="record.time"></td>
                     <td ng-bind="record.location"></td>
                 </tr>
             </tbody>
         </table>
     </div>
+    <iframe class="skip" src="">
+        <!--页面跳转加载-->
+    </iframe>
     <script src="http://libs.useso.com/js/jquery/2.1.0/jquery.min.js"></script>
     <script src="http://libs.useso.com/js/angular.js/1.2.9/angular.min.js" ></script>
     <script>
@@ -45,30 +48,41 @@
                     url: "http://wwpunch.sinaapp.com/getList.php",
                     data: { id: id[1]},
                     type: "GET",
-                    dataType: 'json'
-                })
-                  .then(function (response) {
-                      // success
-                      json = response;
-                      console.log("then");
-                  })
-                  .fail(function () {
-                      console.log("fail");
-                  })
-                  .always(function () {
-                      console.log("always");
-                  });
+                    dataType: 'json',
+                    success:function(result){
+                        json=result;
+                    },
+                    error:function(data){
+                        $(".body").hide();
+                        $(".wait").show();
+                    }
+                });
                 return json;
             }
         }
 
-        function ListController($scope){
+        var module = angular.module('app',[]);
+        module.directive('onFinishRenderFilters', function ($timeout) {
+            return {
+                restrict: 'A',
+                link: function(scope,element,attr) {
+                    if (scope.$last === true) {
+                        $timeout(function() {
+                            //根据controller的关系是选择$emit或者$broadcast
+                            scope.$emit('ngRepeatFinished');
+                            $(".skip").attr("src","app://Success");
+                            $(".body").show();
+                        });
+                    }
+                }
+            };
+        }).controller('ListController',function($scope){
             var records =  getList();
             if(!records.rc){
                 $scope.personName = records.name;
                 $scope.personRecords = records.records;
             }
-        }
+        });
     </script>
 </body>
 </html>
